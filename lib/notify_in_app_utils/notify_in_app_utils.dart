@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+// import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 ///消息弹窗横幅
 class NotifyInAppUtils {
@@ -74,13 +74,13 @@ class NotifyInAppUtils {
 
     overlayState.insert(_overlayEntry!);
     vibration ? HapticFeedback.heavyImpact() : null;
-    playSound
-        ? FlutterRingtonePlayer().play(
-            android: AndroidSounds.notification,
-            ios: IosSounds.receivedMessage,
-            volume: 1,
-          )
-        : null;
+    // playSound
+    //     ? FlutterRingtonePlayer().play(
+    //         android: AndroidSounds.notification,
+    //         ios: IosSounds.receivedMessage,
+    //         volume: 1,
+    //       )
+    //     : null;
   }
 
   bool isShown() {

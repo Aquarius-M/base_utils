@@ -34,8 +34,8 @@ dependencies:
   flutter_svg:
   cached_network_image:
   image_cropper:
-  wechat_assets_picker:
-  wechat_camera_picker:
+  # wechat_assets_picker:
+  # wechat_camera_picker:
   flutter_image_compress:
   image_gallery_saver:
 

@@ -11,8 +11,8 @@ import 'dart:ui' as ui;
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 import 'package:image_cropper/image_cropper.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
-import 'package:wechat_camera_picker/wechat_camera_picker.dart';
+// import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+// import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 
 import 'loading_utils.dart';
 import 'toast_utils.dart';
@@ -30,11 +30,11 @@ enum ImagePickType {
   video,
 }
 
-var imagePickType = {
-  ImagePickType.common: RequestType.common,
-  ImagePickType.image: RequestType.image,
-  ImagePickType.video: RequestType.video,
-};
+// var imagePickType = {
+//   ImagePickType.common: RequestType.common,
+//   ImagePickType.image: RequestType.image,
+//   ImagePickType.video: RequestType.video,
+// };
 
 class ImageUtils {
   static Widget getAssets(
@@ -110,73 +110,73 @@ class ImageUtils {
   }
 
   /// 从相册取图片/视频
-  static Future getGallery(
-    BuildContext context, {
-    int? count = 1,
-    ImagePickType type = ImagePickType.common,
-    List<AssetEntity>? selectedAssets,
-    Color? themeColor,
-  }) async {
-    final List<AssetEntity>? result = await AssetPicker.pickAssets(
-      context,
-      pickerConfig: AssetPickerConfig(
-        textDelegate: assetPickerTextDelegateFromLocale(
-          const Locale('zh', 'CN'),
-        ),
-        selectedAssets: selectedAssets ?? [],
-        requestType: imagePickType[type]!,
-        maxAssets: count!,
-        themeColor: themeColor,
-        specialPickerType: count == 1 ? SpecialPickerType.noPreview : null,
-      ),
-    );
-    if (result != null) {
-      var assets = List<AssetEntity>.from(result);
-      List<File> fileList = [];
-      for (var element in assets) {
-        File? file = await element.file;
-        fileList.add(file!);
-      }
-      return [fileList, assets];
-    }
-  }
+  // static Future getGallery(
+  //   BuildContext context, {
+  //   int? count = 1,
+  //   ImagePickType type = ImagePickType.common,
+  //   List<AssetEntity>? selectedAssets,
+  //   Color? themeColor,
+  // }) async {
+  //   final List<AssetEntity>? result = await AssetPicker.pickAssets(
+  //     context,
+  //     pickerConfig: AssetPickerConfig(
+  //       textDelegate: assetPickerTextDelegateFromLocale(
+  //         const Locale('zh', 'CN'),
+  //       ),
+  //       selectedAssets: selectedAssets ?? [],
+  //       requestType: imagePickType[type]!,
+  //       maxAssets: count!,
+  //       themeColor: themeColor,
+  //       specialPickerType: count == 1 ? SpecialPickerType.noPreview : null,
+  //     ),
+  //   );
+  //   if (result != null) {
+  //     var assets = List<AssetEntity>.from(result);
+  //     List<File> fileList = [];
+  //     for (var element in assets) {
+  //       File? file = await element.file;
+  //       fileList.add(file!);
+  //     }
+  //     return [fileList, assets];
+  //   }
+  // }
 
-  /// 从相机取图片/视频
-  ///
-  /// maxTime 单位：s
-  static Future getCamera(
-    BuildContext context, {
-    int? count = 1,
-    ImagePickType type = ImagePickType.common,
-    List<AssetEntity>? selectedAssets,
-    int? maxTime,
-    bool? isSave = false,
-  }) async {
-    File? fileToBeHandle;
-    final AssetEntity? result = await CameraPicker.pickFromCamera(
-      context,
-      pickerConfig: CameraPickerConfig(
-        enableRecording: true,
-        enableTapRecording: true,
-        textDelegate: cameraPickerTextDelegateFromLocale(
-          const Locale('zh', 'CN'),
-        ),
-        maximumRecordingDuration: Duration(seconds: maxTime ?? 15),
-        onEntitySaving: !isSave!
-            ? (context, viewType, file) {
-                fileToBeHandle = file;
-                Navigator.of(context)
-                  ..pop()
-                  ..pop();
-              }
-            : null,
-      ),
-    );
-    if (result != null) {
-      fileToBeHandle = await result.file;
-    }
-    return fileToBeHandle;
-  }
+  // /// 从相机取图片/视频
+  // ///
+  // /// maxTime 单位：s
+  // static Future getCamera(
+  //   BuildContext context, {
+  //   int? count = 1,
+  //   ImagePickType type = ImagePickType.common,
+  //   List<AssetEntity>? selectedAssets,
+  //   int? maxTime,
+  //   bool? isSave = false,
+  // }) async {
+  //   File? fileToBeHandle;
+  //   final AssetEntity? result = await CameraPicker.pickFromCamera(
+  //     context,
+  //     pickerConfig: CameraPickerConfig(
+  //       enableRecording: true,
+  //       enableTapRecording: true,
+  //       textDelegate: cameraPickerTextDelegateFromLocale(
+  //         const Locale('zh', 'CN'),
+  //       ),
+  //       maximumRecordingDuration: Duration(seconds: maxTime ?? 15),
+  //       onEntitySaving: !isSave!
+  //           ? (context, viewType, file) {
+  //               fileToBeHandle = file;
+  //               Navigator.of(context)
+  //                 ..pop()
+  //                 ..pop();
+  //             }
+  //           : null,
+  //     ),
+  //   );
+  //   if (result != null) {
+  //     fileToBeHandle = await result.file;
+  //   }
+  //   return fileToBeHandle;
+  // }
 
   /// 裁剪图片
   static Future cropImage(String path, CropAspectRatio? aspectRatio, List<CropAspectRatioPreset>? aspectRatioPresets) async {
