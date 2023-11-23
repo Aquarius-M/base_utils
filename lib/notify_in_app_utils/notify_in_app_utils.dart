@@ -75,10 +75,12 @@ class NotifyInAppUtils {
     overlayState.insert(_overlayEntry!);
     vibration ? HapticFeedback.heavyImpact() : null;
     // playSound
-    //     ? FlutterRingtonePlayer().play(
+    //     ? FlutterRingtonePlayer.play(
     //         android: AndroidSounds.notification,
-    //         ios: IosSounds.receivedMessage,
-    //         volume: 1,
+    //         ios: IosSounds.glass,
+    //         looping: false, // Android only - API >= 28
+    //         volume: 1, // Android only - API >= 28
+    //         asAlarm: false, // Android only - all APIs
     //       )
     //     : null;
   }
