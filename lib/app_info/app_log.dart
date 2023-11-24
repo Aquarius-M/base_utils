@@ -87,7 +87,7 @@ class _LogListPageState extends State<LogListPage> {
           logStr,
           softWrap: true,
           style: const TextStyle(
-            fontSize: 12,
+            fontSize: 13,
           ),
         ),
       ),

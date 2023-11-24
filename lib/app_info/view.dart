@@ -1,4 +1,3 @@
-import 'package:base_utils/app_info/app_log.dart';
 import 'package:base_utils/device_utils.dart';
 import 'package:base_utils/loading_utils.dart';
 import 'package:base_utils/log_utils/app_log_utils.dart';
@@ -7,7 +6,6 @@ import 'package:base_utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import '../db/manager.dart';
-import 'sqlite/viewer.dart';
 
 /// 应用信息页面
 class AppInfoPage extends StatefulWidget {
@@ -60,25 +58,6 @@ class _AppInfoPageState extends State<AppInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-          splashFactory: NoSplash.splashFactory,
-          overlayColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              return states.contains(MaterialState.focused) || states.contains(MaterialState.hovered) ? null : Colors.transparent;
-            },
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            alignment: Alignment.center,
-            child: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 20,
-              color: Colors.black,
-            ),
-          ),
-        ),
         title: const Text(
           '应用信息',
           style: TextStyle(
@@ -94,31 +73,12 @@ class _AppInfoPageState extends State<AppInfoPage> {
             _buildPanel(
               '包版本',
               text: '$packageName ${packageVersion}_$buildNumber',
-              onTap: () {},
             ),
             _buildPanel('设备IP', text: wifiIP, onTap: () {
               StringUtils.copy(wifiIP);
             }),
-            _buildPanel(
-              '日志',
-              text: logUrl,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const LogListPage(),
-                  ),
-                );
-              },
-              onLongTap: () {
-                StringUtils.copy(logUrl);
-              },
-            ),
-            _buildPanel('数据库', onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const SqliteViewPage(),
-                ),
-              );
+            _buildPanel('日志', text: logUrl, onTap: () {
+              StringUtils.copy(logUrl);
             }),
             _buildPanel('删除数据库表', onTap: () {
               SqlManager.deleteSql(name: ["soul.db"]);
@@ -136,19 +96,19 @@ class _AppInfoPageState extends State<AppInfoPage> {
     VoidCallback? onTap,
     VoidCallback? onLongTap,
   }) {
-    return GestureDetector(
-      onTap: onTap ??
-          () {
-            StringUtils.copy(title);
-          },
-      onLongPress: onLongTap ?? () {},
-      child: Container(
-        height: 40,
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: Colors.black26),
-        ),
+    return Container(
+      height: 40,
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.black26),
+      ),
+      child: InkWell(
+        onTap: onTap ??
+            () {
+              StringUtils.copy(title);
+            },
+        onLongPress: onLongTap ?? () {},
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(

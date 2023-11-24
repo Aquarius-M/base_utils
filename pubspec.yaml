@@ -63,9 +63,6 @@ dependencies:
   in_app_notification:
   flutter_ringtone_player:
 
-  # 悬浮窗
-  flutter_floating:
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
