@@ -20,7 +20,7 @@ class CodeHandle {
 }
 
 class BaseResponse<T> {
-  final int? code;
+  final T? code;
 
   /// 数据
   final T? data;

@@ -22,6 +22,11 @@ class _AppInfoPageState extends State<AppInfoPage> {
   String? packageName = '';
   String? packageVersion = "";
   String? buildNumber = "";
+  String? buildSignature = "";
+  String? getCachePath = "";
+  String? getPhoneLocalPath = "";
+  String? installerStore = "";
+  String? appName = "";
 
   @override
   void initState() {
@@ -40,9 +45,14 @@ class _AppInfoPageState extends State<AppInfoPage> {
     } else {
       ToastUtils.toast(msg: "未找到ip");
     }
+    appName = await DeviceUtils.appName();
     packageName = await DeviceUtils.packageName();
     packageVersion = await DeviceUtils.version();
     buildNumber = await DeviceUtils.buildNumber();
+    buildSignature = await DeviceUtils.buildSignature();
+    getCachePath = await DeviceUtils.getCachePath();
+    getPhoneLocalPath = await DeviceUtils.getPhoneLocalPath();
+    installerStore = await DeviceUtils.installerStore();
     setState(() {});
   }
 
@@ -70,17 +80,37 @@ class _AppInfoPageState extends State<AppInfoPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildPanel(
-              '包版本',
-              text: '$packageName ${packageVersion}_$buildNumber',
-            ),
-            _buildPanel('设备IP', text: wifiIP, onTap: () {
+            _buildPanel('appName', text: '$appName', onTap: () {
+              StringUtils.copy(appName);
+            }),
+            _buildPanel('packageName', text: '$packageName', onTap: () {
+              StringUtils.copy(packageName);
+            }),
+            _buildPanel('packageVersion', text: '$packageVersion', onTap: () {
+              StringUtils.copy(packageVersion);
+            }),
+            _buildPanel('buildNumber', text: '$buildNumber', onTap: () {
+              StringUtils.copy(buildNumber);
+            }),
+            _buildPanel('Signature', text: '$buildSignature', onTap: () {
+              StringUtils.copy(buildSignature);
+            }),
+            _buildPanel('CachePath', text: '$getCachePath', onTap: () {
+              StringUtils.copy(getCachePath);
+            }),
+            _buildPanel('LocalPath', text: '$getPhoneLocalPath', onTap: () {
+              StringUtils.copy(getPhoneLocalPath);
+            }),
+            _buildPanel('installerStore', text: '$installerStore', onTap: () {
+              StringUtils.copy(installerStore);
+            }),
+            _buildPanel('IP', text: wifiIP, onTap: () {
               StringUtils.copy(wifiIP);
             }),
-            _buildPanel('日志', text: logUrl, onTap: () {
+            _buildPanel('LogPath', text: logUrl, onTap: () {
               StringUtils.copy(logUrl);
             }),
-            _buildPanel('删除数据库表', onTap: () {
+            _buildPanel('Delete Database', onTap: () {
               SqlManager.deleteSql(name: ["soul.db"]);
             }),
           ],
@@ -96,45 +126,66 @@ class _AppInfoPageState extends State<AppInfoPage> {
     VoidCallback? onTap,
     VoidCallback? onLongTap,
   }) {
-    return Container(
-      height: 40,
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.black26),
-      ),
-      child: InkWell(
-        onTap: onTap ??
-            () {
-              StringUtils.copy(title);
-            },
-        onLongPress: onLongTap ?? () {},
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 4),
-                child: Text('$title${text != null ? ':' : ''}'),
+    return InkWell(
+      onTap: onTap ??
+          () {
+            StringUtils.copy(title);
+          },
+      onLongPress: onLongTap ?? () {},
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: Text(
+                '$title${text != null ? ':' : ''}',
+                strutStyle: const StrutStyle(
+                  forceStrutHeight: true,
+                  height: 1.5,
+                ),
               ),
-              Expanded(
-                child: child ??
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: text != null ? Text(text) : const SizedBox(),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Color(0xff333333),
-                          size: 14,
-                        ),
-                      ],
-                    ),
-              ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: child ??
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: text != null
+                            ? RichText(
+                                // strutStyle: const StrutStyle(
+                                //   forceStrutHeight: true,
+                                //   height: 1,
+                                // ),
+                                text: TextSpan(
+                                    text: text,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    children: const [
+                                      // WidgetSpan(
+                                      //   child: Padding(
+                                      //     padding: const EdgeInsets.only(left: 4),
+                                      //     child: GestureDetector(
+                                      //       onTap: onTap,
+                                      //       child: const Icon(
+                                      //         Icons.copy,
+                                      //         size: 16,
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                    ]),
+                              )
+                            : const SizedBox(),
+                      ),
+                      const Icon(Icons.keyboard_arrow_right_rounded)
+                    ],
+                  ),
+            ),
+          ],
         ),
       ),
     );

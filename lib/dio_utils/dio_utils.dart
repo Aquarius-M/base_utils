@@ -25,18 +25,18 @@ class DioUtil {
 
   static DioUtil? _instance;
   static Dio _dio = Dio();
-  Dio get dio => _dio;
 
   DioUtil._internal({String? baseUrl, List<Interceptor>? interceptor}) {
     _instance = this;
     _instance!._init(baseUrl, interceptor);
   }
 
-  factory DioUtil() => _instance!;
-
   static DioUtil getInstance({String? baseUrl, List<Interceptor>? interceptor}) {
-    return DioUtil._internal();
+    _instance ?? DioUtil._internal();
+    return _instance!;
   }
+
+  factory DioUtil() => _instance!;
 
   /// 取消请求token
   final CancelToken _cancelToken = CancelToken();
@@ -99,6 +99,8 @@ class DioUtil {
     //   return client;
     // };
   }
+
+  Dio get dio => _dio;
 
   /// 请求类
   Future<BaseResponse> request<T>(
