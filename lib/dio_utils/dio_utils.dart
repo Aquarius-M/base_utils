@@ -66,6 +66,13 @@ class DioUtil {
     _dio = Dio(baseOptions);
 
     /// 添加拦截器
+    
+    /// 打印日志
+    _dio.interceptors.add(FormatDioLogger(
+      // requestHeader: false,
+      maxBoxWidth: 1,
+    ));
+
     /// 基础拦截器
     if (interceptor != null) {
       if (interceptor.isNotEmpty) {
@@ -75,11 +82,7 @@ class DioUtil {
       }
     }
 
-    /// 打印日志
-    _dio.interceptors.add(FormatDioLogger(
-      // requestHeader: false,
-      maxBoxWidth: 1,
-    ));
+    
 
     /// 代理配置
     // (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
