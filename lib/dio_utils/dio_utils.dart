@@ -26,13 +26,13 @@ class DioUtil {
   static DioUtil? _instance;
   static Dio _dio = Dio();
 
-  DioUtil._internal({String? baseUrl, List<Interceptor>? interceptor}) {
+  DioUtil.internal({String? baseUrl, List<Interceptor>? interceptor}) {
     _instance = this;
     _instance!._init(baseUrl, interceptor);
   }
 
   static DioUtil getInstance({String? baseUrl, List<Interceptor>? interceptor}) {
-    _instance ?? DioUtil._internal();
+    _instance ?? DioUtil.internal();
     return _instance!;
   }
 
@@ -66,23 +66,18 @@ class DioUtil {
     _dio = Dio(baseOptions);
 
     /// 添加拦截器
-    
+    /// 基础拦截器
+    if (interceptor != null) {
+      if (interceptor.isNotEmpty) {
+        _dio.interceptors.addAll(interceptor);
+      }
+    }
+
     /// 打印日志
     _dio.interceptors.add(FormatDioLogger(
       // requestHeader: false,
       maxBoxWidth: 1,
     ));
-
-    /// 基础拦截器
-    if (interceptor != null) {
-      if (interceptor.isNotEmpty) {
-        for (var i in interceptor) {
-          _dio.interceptors.add(i);
-        }
-      }
-    }
-
-    
 
     /// 代理配置
     // (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
