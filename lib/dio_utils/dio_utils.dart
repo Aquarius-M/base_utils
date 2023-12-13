@@ -198,7 +198,7 @@ class DioUtil {
         if (result.code == CodeHandle.success) {
           onSuccess?.call(result.data);
         } else {
-          _onError(result.code, result.message!, onError);
+          _onError(result.code, result.msg!, onError);
         }
       });
   }

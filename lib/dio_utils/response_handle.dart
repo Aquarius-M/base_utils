@@ -26,7 +26,7 @@ class BaseResponse<T> {
   final T? data;
 
   /// 提示信息
-  final String? message;
+  final String? msg;
   final String? status;
   final T? result;
 
@@ -35,7 +35,7 @@ class BaseResponse<T> {
   BaseResponse({
     this.code,
     this.data,
-    this.message,
+    this.msg,
     this.error,
     this.status,
     this.result,
@@ -46,7 +46,7 @@ class BaseResponse<T> {
   ) {
     return BaseResponse<T>(
       code: json['code'],
-      message: json['message'],
+      msg: json['msg'],
       error: json['error'],
       data: json['data'],
       status: json['status'],
@@ -56,10 +56,10 @@ class BaseResponse<T> {
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) {
     return <String, dynamic>{
       "code": code,
-      "message": message,
+      "msg": msg,
       "error": error,
       "data": data == null ? null : toJsonT(data as T),
-      "status": message,
+      "status": msg,
       "result": data == null ? null : toJsonT(data as T),
     };
   }
