@@ -1,11 +1,10 @@
 name: base_utils
 description: "A new Flutter project."
 version: 0.0.1
-homepage:
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.3.0"
 
 dependencies:
   flutter:

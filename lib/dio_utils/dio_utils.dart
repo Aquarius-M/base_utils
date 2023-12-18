@@ -31,7 +31,8 @@ class DioUtil {
     _instance!._init(baseUrl, interceptor);
   }
 
-  static DioUtil getInstance({String? baseUrl, List<Interceptor>? interceptor}) {
+  static DioUtil getInstance(
+      {String? baseUrl, List<Interceptor>? interceptor}) {
     _instance ?? DioUtil.internal();
     return _instance!;
   }
@@ -171,7 +172,8 @@ class DioUtil {
       }
       // rethrow;
     }
-    return BaseResponse.fromJson(response != null ? response.data : {}, (json) => null);
+    return BaseResponse.fromJson(
+        response != null ? response.data : {}, (json) => null);
   }
 
   Future<BaseResponse> requestNetwork<T>(
