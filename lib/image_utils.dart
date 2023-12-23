@@ -1,6 +1,8 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +58,9 @@ class ImageUtils {
           : null,
       child: format == ImageFormat.svg
           ? SvgPicture.asset(
-              isCustom! ? assetName : 'assets/${pathFormat.name}/$assetName.${format.name}',
+              isCustom!
+                  ? assetName
+                  : 'assets/${pathFormat.name}/$assetName.${format.name}',
               width: width,
               height: height,
               colorFilter: color != null
@@ -68,7 +72,9 @@ class ImageUtils {
               fit: fit,
             )
           : Image.asset(
-              isCustom! ? assetName : 'assets/${pathFormat.name}/$assetName.${format.name}',
+              isCustom!
+                  ? assetName
+                  : 'assets/${pathFormat.name}/$assetName.${format.name}',
               width: width,
               height: height,
               fit: fit,
@@ -78,7 +84,8 @@ class ImageUtils {
   }
 
   /// 图片压缩 File -> File
-  static Future<Object?> imageCompressAndGetFile({File? file, String? path}) async {
+  static Future<Object?> imageCompressAndGetFile(
+      {File? file, String? path}) async {
     if (file!.lengthSync() < 200 * 1024) {
       return file;
     }
@@ -97,7 +104,8 @@ class ImageUtils {
       quality = 100;
     }
     var dir = await path_provider.getTemporaryDirectory();
-    var targetPath = "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch}.jpg";
+    var targetPath =
+        "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch}.jpg";
 
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
@@ -179,7 +187,8 @@ class ImageUtils {
   // }
 
   /// 裁剪图片
-  static Future cropImage(String path, CropAspectRatio? aspectRatio, List<CropAspectRatioPreset>? aspectRatioPresets) async {
+  static Future cropImage(String path, CropAspectRatio? aspectRatio,
+      List<CropAspectRatioPreset>? aspectRatioPresets) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       compressQuality: 100,
@@ -230,15 +239,39 @@ class ImageUtils {
 
   static Future<ByteData?> _capturePngToByteData(GlobalKey key) async {
     try {
-      RenderRepaintBoundary? boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
-      double dpr = ui.PlatformDispatcher.instance.implicitView!.devicePixelRatio;
+      RenderRepaintBoundary? boundary =
+          key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
+      double dpr =
+          ui.PlatformDispatcher.instance.implicitView!.devicePixelRatio;
       // 获取当前设备的像素比
       ui.Image image = await boundary!.toImage(pixelRatio: dpr);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       return byteData;
     } catch (e) {
       // print(e);
     }
     return null;
+  }
+
+  /// ImageProvider转ui.Image 实际使用
+  ///
+  /// ui.Image image = await ImageUtils.loadImageByProvider(
+  ///       CachedNetworkImageProvider(imgUrl));
+  static Future<ui.Image> loadImageByProvider(
+    ImageProvider provider, {
+    ImageConfiguration config = ImageConfiguration.empty,
+  }) async {
+    Completer<ui.Image> completer = Completer<ui.Image>(); //完成的回调
+    ImageStreamListener? listener;
+    ImageStream stream = provider.resolve(config); //获取图片流
+    listener = ImageStreamListener((ImageInfo frame, bool sync) {
+      //监听
+      final ui.Image image = frame.image;
+      completer.complete(image); //完成
+      stream.removeListener(listener!); //移除监听
+    });
+    stream.addListener(listener); //添加监听
+    return completer.future; //返回
   }
 }
