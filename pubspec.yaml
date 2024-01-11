@@ -62,6 +62,9 @@ dependencies:
   in_app_notification:
   flutter_ringtone_player:
 
+  # 引导
+  tutorial_coach_mark:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

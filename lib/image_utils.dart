@@ -41,6 +41,7 @@ enum ImagePickType {
 class ImageUtils {
   static Widget getAssets(
     String assetName, {
+    Key? key,
     double? width,
     double? height,
     bool? isCustom = false,
@@ -58,6 +59,7 @@ class ImageUtils {
           : null,
       child: format == ImageFormat.svg
           ? SvgPicture.asset(
+              key: key,
               isCustom!
                   ? assetName
                   : 'assets/${pathFormat.name}/$assetName.${format.name}',
@@ -75,6 +77,7 @@ class ImageUtils {
               isCustom!
                   ? assetName
                   : 'assets/${pathFormat.name}/$assetName.${format.name}',
+              key: key,
               width: width,
               height: height,
               fit: fit,
