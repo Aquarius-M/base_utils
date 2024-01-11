@@ -8,58 +8,100 @@ class TutorialUtils {
 
   TutorialUtils(this.context);
 
+  static TutorialCoachMarkController? tutorialCoachMarkController;
   void showTutorial({
     bool? hideSkip,
     String? skipText,
+    TextStyle? skipTextStyle,
+    AlignmentGeometry? skipPosition,
     Color? bgColor,
     double? opacity,
     double? padding,
+    Function()? onFinish,
+    Function(TargetFocus)? clickTarget,
+    Function(TargetFocus, TapDownDetails)? clickTargetWithTapPosition,
+    Function(TargetFocus)? clickOverlay,
+    Function()? onSkip,
     List? keyList,
+    double? radius,
+    StatelessWidget? contentWidget,
   }) {
     TutorialCoachMark(
       targets: _createTargets(
         keyList: keyList ?? [],
+        radius: radius,
+        skipPosition: skipPosition,
+        contentWidget: contentWidget,
       ),
       colorShadow: bgColor ?? Colors.red,
-      textSkip: skipText ?? "跳过",
+      pulseEnable: false,
+      skipWidget: Text(
+        skipText ?? "跳过",
+        style: skipTextStyle,
+      ),
       hideSkip: hideSkip ?? false,
-      paddingFocus: padding ?? 10,
+      paddingFocus: padding ?? 0,
       opacityShadow: opacity ?? 0.5,
       imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-      onFinish: () {},
-      onClickTarget: (target) {},
-      onClickTargetWithTapPosition: (target, tapDetails) {},
-      onClickOverlay: (target) {},
+      onFinish: () {
+        onFinish?.call();
+      },
+      onClickTarget: (target) {
+        clickTarget?.call(target);
+      },
+      onClickTargetWithTapPosition: (target, tapDetails) {
+        clickTargetWithTapPosition?.call(target, tapDetails);
+      },
+      onClickOverlay: (target) {
+        clickOverlay?.call(target);
+      },
       onSkip: () {
+        onSkip?.call();
         return true;
       },
     ).show(context: context);
   }
 
-  List<TargetFocus> _createTargets({List? keyList, double? radius}) {
+  List<TargetFocus> _createTargets({
+    List? keyList,
+    double? radius,
+    AlignmentGeometry? skipPosition,
+    Widget? contentWidget,
+  }) {
     List<TargetFocus> targets = [];
 
     for (var i in keyList!) {
+      // int index = keyList.indexOf(i);
+      var id = ValueKey(i['key']);
+      GlobalKey key = i['key'];
+      double? left = i['LTRB'][0];
+      double? top = i['LTRB'][1];
+      double? right = i['LTRB'][2];
+      double? bottom = i['LTRB'][3];
       targets.add(
         TargetFocus(
-          identify: i['id'],
-          keyTarget: i['key'],
+          identify: id,
+          keyTarget: key,
           shape: ShapeLightFocus.RRect,
-          radius: radius ?? 6,
+          alignSkip: skipPosition ?? Alignment.center,
+          radius: radius,
           contents: [
             TargetContent(
-              align: ContentAlign.top,
+              align: ContentAlign.custom,
+              customPosition: CustomTargetContentPosition(
+                left: left,
+                top: top,
+                right: right,
+                bottom: bottom,
+              ),
               builder: (context, controller) {
+                tutorialCoachMarkController = controller;
                 return Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      i['content'],
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    i['widget'],
                   ],
                 );
               },
