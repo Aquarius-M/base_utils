@@ -17,21 +17,19 @@ class TutorialUtils {
     Color? bgColor,
     double? opacity,
     double? padding,
-    Function()? onFinish,
-    Function(TargetFocus)? clickTarget,
-    Function(TargetFocus, TapDownDetails)? clickTargetWithTapPosition,
-    Function(TargetFocus)? clickOverlay,
-    Function()? onSkip,
     List? keyList,
     double? radius,
-    StatelessWidget? contentWidget,
+    Function(TargetFocus)? clickTarget,
+    Function(TargetFocus)? clickOverlay,
+    Function(TargetFocus, TapDownDetails)? clickTargetWithTapPosition,
+    Function()? onSkip,
+    Function()? onFinish,
   }) {
     TutorialCoachMark(
       targets: _createTargets(
         keyList: keyList ?? [],
         radius: radius,
         skipPosition: skipPosition,
-        contentWidget: contentWidget,
       ),
       colorShadow: bgColor ?? Colors.red,
       pulseEnable: false,
@@ -66,7 +64,6 @@ class TutorialUtils {
     List? keyList,
     double? radius,
     AlignmentGeometry? skipPosition,
-    Widget? contentWidget,
   }) {
     List<TargetFocus> targets = [];
 
@@ -78,13 +75,16 @@ class TutorialUtils {
       double? top = i['LTRB'][1];
       double? right = i['LTRB'][2];
       double? bottom = i['LTRB'][3];
+      String? type = i["shape"];
       targets.add(
         TargetFocus(
           identify: id,
           keyTarget: key,
-          shape: ShapeLightFocus.RRect,
+          shape:
+              type == "Circle" ? ShapeLightFocus.Circle : ShapeLightFocus.RRect,
           alignSkip: skipPosition ?? Alignment.center,
           radius: radius,
+          enableTargetTab: true,
           contents: [
             TargetContent(
               align: ContentAlign.custom,
