@@ -84,7 +84,7 @@ class TutorialUtils {
               type == "Circle" ? ShapeLightFocus.Circle : ShapeLightFocus.RRect,
           alignSkip: skipPosition ?? Alignment.center,
           radius: radius,
-          enableTargetTab: true,
+          enableTargetTab: false,
           contents: [
             TargetContent(
               align: ContentAlign.custom,
