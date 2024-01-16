@@ -15,6 +15,9 @@ dependencies:
 
   # 权限
   permission_handler:
+  # 持久化储存
+  synchronized:
+  shared_preferences:
   # 包，设备信息
   device_info_plus:
   package_info_plus:
