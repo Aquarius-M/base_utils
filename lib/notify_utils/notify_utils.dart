@@ -57,7 +57,7 @@ class NotifyUtils {
 
   static final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  static init() async {
+  static Future init() async {
     if (Platform.isAndroid) {
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
