@@ -310,7 +310,7 @@ class TimeUtils {
         age--; //当前月份在生日之前，年龄减一
       }
     }
-    return "$age岁";
+    return "$age";
   }
 
   static String getConstellation(DateTime birthday) {
