@@ -1,6 +1,8 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -39,6 +41,7 @@ enum ImagePickType {
 class ImageUtils {
   static Widget getAssets(
     String assetName, {
+    Key? key,
     double? width,
     double? height,
     bool? isCustom = false,
@@ -56,6 +59,7 @@ class ImageUtils {
           : null,
       child: format == ImageFormat.svg
           ? SvgPicture.asset(
+              key: key,
               isCustom!
                   ? assetName
                   : 'assets/${pathFormat.name}/$assetName.${format.name}',
@@ -73,6 +77,7 @@ class ImageUtils {
               isCustom!
                   ? assetName
                   : 'assets/${pathFormat.name}/$assetName.${format.name}',
+              key: key,
               width: width,
               height: height,
               fit: fit,
@@ -250,5 +255,26 @@ class ImageUtils {
       // print(e);
     }
     return null;
+  }
+
+  /// ImageProvider转ui.Image 实际使用
+  ///
+  /// ui.Image image = await ImageUtils.loadImageByProvider(
+  ///       CachedNetworkImageProvider(imgUrl));
+  static Future<ui.Image> loadImageByProvider(
+    ImageProvider provider, {
+    ImageConfiguration config = ImageConfiguration.empty,
+  }) async {
+    Completer<ui.Image> completer = Completer<ui.Image>(); //完成的回调
+    ImageStreamListener? listener;
+    ImageStream stream = provider.resolve(config); //获取图片流
+    listener = ImageStreamListener((ImageInfo frame, bool sync) {
+      //监听
+      final ui.Image image = frame.image;
+      completer.complete(image); //完成
+      stream.removeListener(listener!); //移除监听
+    });
+    stream.addListener(listener); //添加监听
+    return completer.future; //返回
   }
 }

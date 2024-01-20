@@ -1,11 +1,10 @@
 name: base_utils
 description: "A new Flutter project."
 version: 0.0.1
-homepage:
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.3.0"
 
 dependencies:
   flutter:
@@ -16,6 +15,9 @@ dependencies:
 
   # 权限
   permission_handler:
+  # 持久化储存
+  synchronized:
+  shared_preferences:
   # 包，设备信息
   device_info_plus:
   package_info_plus:
@@ -62,6 +64,9 @@ dependencies:
   # 应用内通知
   in_app_notification:
   flutter_ringtone_player:
+
+  # 引导
+  tutorial_coach_mark:
 
 dev_dependencies:
   flutter_test:
