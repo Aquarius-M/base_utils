@@ -81,19 +81,19 @@ class _AppInfoPageState extends State<AppInfoPage> {
         child: Column(
           children: [
             _buildPanel('appName', text: '$appName', onTap: () {
-              StringUtils.copy(appName);
+              // StringUtils.copy(appName);
             }),
             _buildPanel('packageName', text: '$packageName', onTap: () {
-              StringUtils.copy(packageName);
+              // StringUtils.copy(packageName);
             }),
             _buildPanel('packageVersion', text: '$packageVersion', onTap: () {
-              StringUtils.copy(packageVersion);
+              // StringUtils.copy(packageVersion);
             }),
             _buildPanel('buildNumber', text: '$buildNumber', onTap: () {
-              StringUtils.copy(buildNumber);
+              // StringUtils.copy(buildNumber);
             }),
             _buildPanel('Signature', text: '$buildSignature', onTap: () {
-              StringUtils.copy(buildSignature);
+              // StringUtils.copy(buildSignature);
             }),
             _buildPanel('CachePath', text: '$getCachePath', onTap: () {
               StringUtils.copy(getCachePath);
@@ -102,7 +102,7 @@ class _AppInfoPageState extends State<AppInfoPage> {
               StringUtils.copy(getPhoneLocalPath);
             }),
             _buildPanel('installerStore', text: '$installerStore', onTap: () {
-              StringUtils.copy(installerStore);
+              // StringUtils.copy(installerStore);
             }),
             _buildPanel('IP', text: wifiIP, onTap: () {
               StringUtils.copy(wifiIP);
