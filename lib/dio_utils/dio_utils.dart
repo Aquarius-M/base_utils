@@ -29,17 +29,14 @@ class DioUtil {
   static DioUtil? _instance;
   static Dio _dio = Dio();
 
-  DioUtil.internal(
-      {String? baseUrl, List<Interceptor>? interceptor, String? proxyUrl}) {
+  DioUtil.internal({String? baseUrl, List<Interceptor>? interceptor}) {
     _instance = this;
-    _instance!._init(baseUrl, interceptor, proxyUrl);
+    _instance!._init(baseUrl, interceptor);
   }
 
   static DioUtil getInstance(
-      {String? baseUrl, List<Interceptor>? interceptor, String? proxyUrl}) {
-    _instance ??
-        DioUtil.internal(
-            baseUrl: baseUrl, interceptor: interceptor, proxyUrl: proxyUrl);
+      {String? baseUrl, List<Interceptor>? interceptor}) {
+    _instance ?? DioUtil.internal();
     return _instance!;
   }
 
@@ -48,7 +45,9 @@ class DioUtil {
   /// 取消请求token
   final CancelToken _cancelToken = CancelToken();
 
-  _init(String? baseUrl, List<Interceptor>? interceptor, String? proxyUrl) {
+  String? proxyUrl = "";
+
+  _init(String? baseUrl, List<Interceptor>? interceptor) {
     /// 初始化基本选项
     BaseOptions baseOptions = BaseOptions(
       baseUrl: baseUrl ?? "",
@@ -87,23 +86,30 @@ class DioUtil {
     ));
 
     /// 代理配置
-    (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-      final client = HttpClient();
-      client.findProxy = (uri) {
-        if (proxyUrl != "" && proxyUrl != null) {
-          AppLog.i(
-            LogMsg(
-              'PROXY $proxyUrl',
-              thread: "Request Proxy",
-              method: "Proxy",
-            ),
-          );
-          return 'PROXY $proxyUrl';
-        }
-        return 'DIRECT';
-      };
-      return client;
-    };
+    _dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final client = HttpClient();
+        client.findProxy = (uri) {
+          // Proxy all request to localhost:8888.
+          // Be aware, the proxy should went through you running device,
+          // not the host platform.
+          if (proxyUrl != "") {
+            AppLog.i(
+              LogMsg(
+                'PROXY $proxyUrl',
+                thread: "Request Proxy",
+                method: "Proxy",
+              ),
+            );
+            return 'PROXY $proxyUrl';
+          }
+          return 'DIRECT';
+        };
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+        return client;
+      },
+    );
   }
 
   Dio get dio => _dio;
