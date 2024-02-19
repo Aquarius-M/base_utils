@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:base_utils/loading_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 
 import '../log_utils/app_log_utils.dart';
 import '../log_utils/format_dio_logger/format_dio_logger.dart';
@@ -26,14 +29,17 @@ class DioUtil {
   static DioUtil? _instance;
   static Dio _dio = Dio();
 
-  DioUtil.internal({String? baseUrl, List<Interceptor>? interceptor}) {
+  DioUtil.internal(
+      {String? baseUrl, List<Interceptor>? interceptor, String? proxyUrl}) {
     _instance = this;
-    _instance!._init(baseUrl, interceptor);
+    _instance!._init(baseUrl, interceptor, proxyUrl);
   }
 
   static DioUtil getInstance(
-      {String? baseUrl, List<Interceptor>? interceptor}) {
-    _instance ?? DioUtil.internal();
+      {String? baseUrl, List<Interceptor>? interceptor, String? proxyUrl}) {
+    _instance ??
+        DioUtil.internal(
+            baseUrl: baseUrl, interceptor: interceptor, proxyUrl: proxyUrl);
     return _instance!;
   }
 
@@ -42,7 +48,7 @@ class DioUtil {
   /// 取消请求token
   final CancelToken _cancelToken = CancelToken();
 
-  _init(String? baseUrl, List<Interceptor>? interceptor) {
+  _init(String? baseUrl, List<Interceptor>? interceptor, String? proxyUrl) {
     /// 初始化基本选项
     BaseOptions baseOptions = BaseOptions(
       baseUrl: baseUrl ?? "",
@@ -81,22 +87,23 @@ class DioUtil {
     ));
 
     /// 代理配置
-    // (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
-    //   client.findProxy = (uri) {
-    //     if (Global.httpProxyConfig.proxyUrl != "") {
-    //       AppLog.i(
-    //         LogMsg(
-    //           'PROXY ${Global.httpProxyConfig.proxyUrl}',
-    //           thread: "Request Proxy",
-    //           method: "Proxy",
-    //         ),
-    //       );
-    //       return 'PROXY ${Global.httpProxyConfig.proxyUrl}';
-    //     }
-    //     return 'DIRECT';
-    //   };
-    //   return client;
-    // };
+    (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      final client = HttpClient();
+      client.findProxy = (uri) {
+        if (proxyUrl != "" && proxyUrl != null) {
+          AppLog.i(
+            LogMsg(
+              'PROXY $proxyUrl',
+              thread: "Request Proxy",
+              method: "Proxy",
+            ),
+          );
+          return 'PROXY $proxyUrl';
+        }
+        return 'DIRECT';
+      };
+      return client;
+    };
   }
 
   Dio get dio => _dio;

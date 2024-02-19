@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// 实际使用
-/// 
+///
 /// LoadImage loadImage = LoadImage(image);
 class LoadImage extends ImageProvider<LoadImage> {
   const LoadImage(this.image, {this.scale = 1.0});
@@ -34,6 +34,7 @@ class LoadImage extends ImageProvider<LoadImage> {
   }
 
   @override
+  // ignore: non_nullable_equals_parameter
   bool operator ==(dynamic other) {
     if (other.runtimeType != runtimeType) return false;
     final LoadImage typedOther = other;
