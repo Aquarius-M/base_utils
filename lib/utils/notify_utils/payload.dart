@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:base_utils/log_utils/app_log_utils.dart';
+import 'package:base_utils/utils/log_utils/app_log_utils.dart';
 
 class ReceivedInfo {
   ReceivedInfo({

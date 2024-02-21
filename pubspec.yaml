@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   plugin_platform_interface: ^2.0.2
 
   # 权限
@@ -60,7 +62,6 @@ dependencies:
 
   # 数据库
   sqflite:
-  sqlite_viewer:
 
   # 应用内通知
   in_app_notification:
@@ -68,6 +69,15 @@ dependencies:
 
   # 引导
   tutorial_coach_mark:
+
+  # devkit相关
+  tuple:
+  image:
+  touch_indicator:
+  platform:
+  system_info2:
+  string_scanner:
+  sqlite_viewer:
 
 dev_dependencies:
   flutter_test:

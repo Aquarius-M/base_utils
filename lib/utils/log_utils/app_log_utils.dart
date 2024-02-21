@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:base_utils/time_utils.dart';
+import 'package:base_utils/utils/time_utils.dart';
 import 'package:get_server/get_server.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';

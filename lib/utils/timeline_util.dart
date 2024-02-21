@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names, no_leading_underscores_for_local_identifiers
 
-import 'package:base_utils/time_utils.dart';
+import 'package:base_utils/utils/time_utils.dart';
 
 ///(xx)Configurable output.
 ///(xx)为可配置输出.

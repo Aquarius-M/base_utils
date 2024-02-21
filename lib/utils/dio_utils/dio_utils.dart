@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:base_utils/loading_utils.dart';
+import 'package:base_utils/utils/loading_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
