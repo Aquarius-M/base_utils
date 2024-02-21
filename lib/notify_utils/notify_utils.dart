@@ -5,6 +5,8 @@ import 'package:base_utils/notify_utils/payload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../log_utils/app_log_utils.dart';
+
 /// android/app/build.gradle
 // android {
 //   defaultConfig {
@@ -55,12 +57,17 @@ class NotifyUtils {
 
   NotifyUtils._();
 
-  static final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   static Future init() async {
     if (Platform.isAndroid) {
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-      flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+          FlutterLocalNotificationsPlugin();
+      flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()!
+          .requestNotificationsPermission();
     }
     var android = const AndroidInitializationSettings('@mipmap/ic_launcher');
     var iOS = const DarwinInitializationSettings();
@@ -79,19 +86,25 @@ class NotifyUtils {
         }
       },
     ).then((value) {
-      debugPrint("初始化通知成功");
+      AppLog.i("初始化通知成功");
     });
   }
 
   static void requestPermissions() async {
     if (Platform.isIOS) {
-      await _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
             alert: true,
             badge: true,
             sound: true,
           );
     } else if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation = _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>();
 
       await androidImplementation?.requestNotificationsPermission();
     }

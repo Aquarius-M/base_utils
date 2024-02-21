@@ -23,6 +23,7 @@ dependencies:
   package_info_plus:
   network_info_plus:
 
+  path:
   path_provider:
   url_launcher:
 

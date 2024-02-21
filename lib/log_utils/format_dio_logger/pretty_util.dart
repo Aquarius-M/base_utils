@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import '../app_log_utils.dart';
 import 'constants.dart';
 
 ///
@@ -60,7 +61,7 @@ class PrettyUtil {
       } else {
         _print(element);
       }
-      // AppLog.writeFile(element);
+      AppLog.writeFile(element);
     }
   }
 

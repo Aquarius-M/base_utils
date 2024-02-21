@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 import 'package:base_utils/log_utils/app_log_utils.dart';
 import 'package:base_utils/toast_utils.dart';
@@ -15,18 +16,24 @@ class LogListPage extends StatefulWidget {
 class _LogListPageState extends State<LogListPage> {
   ScrollController scrollController = ScrollController();
   String logStr = '';
+
+  TextEditingController? textEditingController;
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
     super.initState();
     _loadLog();
   }
 
-  Future _loadLog() async {
+  Future _loadLog({String? path}) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String outPath = '${appDocDir.path}/log';
     File file = File(
-      '$outPath/.${DateTime.now().toString().replaceAll(RegExp(r'(?<=\d\d-\d\d-\d\d)[\S|\s]+'), '')}.log',
+      path != null
+          ? '$outPath/$path'
+          : '$outPath/.${DateTime.now().toString().replaceAll(RegExp(r'(?<=\d\d-\d\d-\d\d)[\S|\s]+'), '')}.log',
     );
+    String fileName = p.basename(file.path);
     if (!await file.exists()) {
       await file.create(recursive: true);
     }
@@ -34,12 +41,16 @@ class _LogListPageState extends State<LogListPage> {
     setState(() {
       logStr = content;
     });
+    textEditingController = TextEditingController(text: fileName);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: const Color(0xfff1f1f1),
       appBar: AppBar(
+        backgroundColor: const Color(0xfff1f1f1),
         title: const Text(
           '日志',
           style: TextStyle(
@@ -51,11 +62,13 @@ class _LogListPageState extends State<LogListPage> {
         actions: [
           IconButton(
             onPressed: () async {
-              if (scrollController.offset == scrollController.position.maxScrollExtent) {
+              if (scrollController.offset ==
+                  scrollController.position.maxScrollExtent) {
                 scrollController.jumpTo(0);
                 setState(() {});
               } else {
-                scrollController.jumpTo(scrollController.position.maxScrollExtent);
+                scrollController
+                    .jumpTo(scrollController.position.maxScrollExtent);
                 setState(() {});
               }
             },
@@ -80,16 +93,64 @@ class _LogListPageState extends State<LogListPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        controller: scrollController,
-        physics: const BouncingScrollPhysics(),
-        child: Text(
-          logStr,
-          softWrap: true,
-          style: const TextStyle(
-            fontSize: 13,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Container(
+                // height: 30,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: TextField(
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  textInputAction: TextInputAction.done,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    hintStyle: TextStyle(
+                      color: Color(0xffcccccc),
+                      fontWeight: FontWeight.w400,
+                      height: 1.5,
+                    ),
+                    hintText: '日志名称',
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    isDense: true,
+                    counterText: '',
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    focusedErrorBorder: InputBorder.none,
+                  ),
+                  onSubmitted: (value) {
+                    if (value != "") {
+                      _loadLog(path: value);
+                    } else {
+                      _loadLog();
+                    }
+                  },
+                )),
           ),
-        ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              physics: const BouncingScrollPhysics(),
+              child: Text(
+                logStr,
+                softWrap: true,
+                style: const TextStyle(
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

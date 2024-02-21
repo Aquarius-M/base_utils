@@ -81,7 +81,7 @@ class DioUtil {
 
     /// 打印日志
     _dio.interceptors.add(FormatDioLogger(
-      // requestHeader: false,
+      requestHeader: false,
       maxBoxWidth: 1,
     ));
 
