@@ -83,7 +83,7 @@ class FormatDioLogger extends Interceptor {
     List<String> buffer = [];
     buffer.addAll(_prettyUtil.prettyBoxHeader(
       header:
-          "Response ║ ${response.requestOptions.method} ║ Status: ${response.statusCode} ${response.statusMessage} ╠",
+          "Response ║ ${response.requestOptions.method}-${response.statusCode} ${response.statusMessage} ╠",
       url: response.requestOptions.uri.toString(),
     ));
     if (responseHeader) {
