@@ -10,7 +10,8 @@ import 'toast_utils.dart';
 class StringUtils {
   // 邮箱判断
   static bool isEmail(String input) {
-    String regexEmail = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}\$";
+    String regexEmail =
+        "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}\$";
     if (input.isEmpty) return false;
     return RegExp(regexEmail).hasMatch(input);
   }
@@ -40,7 +41,8 @@ class StringUtils {
   // 仅仅包含字母和数字
   static const String LETTER_DIGIT_REGEX = "^[a-z0-9A-Z]+\$";
   static const String CHINESE_LETTER_REGEX = "([\u4e00-\u9fa5]+|[a-zA-Z]+)";
-  static const String CHINESE_LETTER_DIGIT_REGEX = "^[a-z0-9A-Z\u4e00-\u9fa5]+\$";
+  static const String CHINESE_LETTER_DIGIT_REGEX =
+      "^[a-z0-9A-Z\u4e00-\u9fa5]+\$";
 
   // 纯数字
   static bool isOnly(String input) {
@@ -94,7 +96,8 @@ class StringUtils {
   }
 
   /// 每隔 x位 加 pattern
-  static String formatDigitPattern(String text, {int digit = 4, String pattern = ' '}) {
+  static String formatDigitPattern(String text,
+      {int digit = 4, String pattern = ' '}) {
     text = text.replaceAllMapped(RegExp('(.{$digit})'), (Match match) {
       return '${match.group(0)}$pattern';
     });
@@ -108,15 +111,29 @@ class StringUtils {
   /// 此方法中前三位格式有：
   /// 13+任意数 * 15+除4的任意数 * 18+除1和4的任意数 * 17+除9的任意数 * 147
   static bool checkPhone(String str) {
-    return RegExp('^((13[0-9])|(15[^4])|(166)|(17[0-8])|(18[0-9])|(19[8-9])|(147,145))\\d{8}\$').hasMatch(str);
+    return RegExp(
+            '^((13[0-9])|(15[^4])|(166)|(17[0-8])|(18[0-9])|(19[8-9])|(147,145))\\d{8}\$')
+        .hasMatch(str);
   }
 
   // 隐藏手机号
-  static String hideStr(String code, int num) {
-    final int length = code.length;
+  static String hidePhone(String phone, int num) {
+    final int length = phone.length;
     final int replaceLength = length - num;
-    final String replacement = List<String>.generate((replaceLength / 4).ceil(), (int _) => '***').join('');
-    return code.replaceRange(0, replaceLength, replacement);
+    final String replacement =
+        List<String>.generate((replaceLength / 4).ceil(), (int _) => '***')
+            .join('');
+    return phone.replaceRange(0, replaceLength, replacement);
+  }
+
+  // 隐藏邮箱
+  static String hideEmail(String email, int num) {
+    final int length = email.length;
+    final int replaceLength = length - num;
+    final String replacement =
+        List<String>.generate((replaceLength / 4).ceil(), (int _) => '***')
+            .join('');
+    return email.replaceRange(num, length, replacement);
   }
 
   // 点击复制
