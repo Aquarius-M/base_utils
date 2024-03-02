@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
+  plugin_platform_interface:
 
   # 权限
   permission_handler:
