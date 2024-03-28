@@ -137,7 +137,7 @@ class DioUtil {
     options ??= Options(method: methodValues[method]);
     // 没有网络
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult[0] == ConnectivityResult.none) {
       var netError = {
         "code": CodeHandle.netError,
         "message": "没有网络了",

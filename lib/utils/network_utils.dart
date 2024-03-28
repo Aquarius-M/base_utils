@@ -10,16 +10,16 @@ class NetWorkUtils {
   /// 判断网络是否连接
   static Future<bool> isConnected() async {
     var connectResult = await (Connectivity().checkConnectivity());
-    return connectResult != ConnectivityResult.none;
+    return connectResult.isNotEmpty;
   }
 
   /// 获取联网类型
   static Future<String> getConnectType() async {
     var connectResult = await (Connectivity().checkConnectivity());
 
-    if (connectResult == ConnectivityResult.mobile) {
+    if (connectResult[0] == ConnectivityResult.mobile) {
       netType = "流量";
-    } else if (connectResult == ConnectivityResult.wifi) {
+    } else if (connectResult[0] == ConnectivityResult.wifi) {
       netType = "WIFI";
     } else {
       netType = "未连接";
