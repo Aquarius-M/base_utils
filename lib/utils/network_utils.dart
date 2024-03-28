@@ -27,10 +27,11 @@ class NetWorkUtils {
     return netType;
   }
 
-  static StreamSubscription<ConnectivityResult> connectivitySubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-    if (result == ConnectivityResult.mobile) {
+  static StreamSubscription<List<ConnectivityResult>> connectivitySubscription =
+      Connectivity().onConnectivityChanged.listen((result) {
+    if (result[0] == ConnectivityResult.mobile) {
       netType = "流量";
-    } else if (result == ConnectivityResult.wifi) {
+    } else if (result[0] == ConnectivityResult.wifi) {
       netType = "WIFI";
     } else {
       netType = "未连接";

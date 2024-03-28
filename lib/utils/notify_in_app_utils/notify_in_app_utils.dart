@@ -6,7 +6,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 ///消息弹窗横幅
 class NotifyInAppUtils {
-  OverlayEntry? _overlayEntry;
+  static NotifyView? preNotify;
 
   final GlobalKey<_NotifyWidgetState> _stateKey = GlobalKey();
 
@@ -21,6 +21,7 @@ class NotifyInAppUtils {
     Function()? onTap,
     bool playSound = true,
     bool vibration = true,
+    bool onlyOne = false,
   }) {
     _createView(
       child,
@@ -33,6 +34,7 @@ class NotifyInAppUtils {
       onTap,
       playSound,
       vibration,
+      onlyOne,
     );
   }
 
@@ -47,17 +49,23 @@ class NotifyInAppUtils {
     Function()? onTap,
     bool playSound,
     bool vibration,
+    bool onlyOne,
   ) {
-    if (_overlayEntry != null) {
-      throw ArgumentError("you shuold call dismiss() firstly");
+    // 防止连续调用造成弹窗堆叠
+    if (onlyOne) {
+      preNotify?.dismiss();
+      preNotify = null;
     }
 
     final OverlayState overlayState = Overlay.of(context);
+    OverlayEntry? overlayEntry;
 
-    _overlayEntry = OverlayEntry(
+    overlayEntry = OverlayEntry(
       builder: (BuildContext context) => NotifyWidget(
         key: _stateKey,
-        finished: _closeSelfImmediately,
+        finished: () {
+          preNotify?.dismiss();
+        },
         duration: duration,
         keepDuration: keepDuration,
         topOffset: topOffset,
@@ -67,12 +75,17 @@ class NotifyInAppUtils {
         child: child,
         onTap: () {
           onTap?.call();
-          dismiss(true);
+          preNotify?.dismiss();
         },
       ),
     );
 
-    overlayState.insert(_overlayEntry!);
+    var notifyView = NotifyView();
+    notifyView.overlayEntry = overlayEntry;
+    notifyView.overlayState = overlayState;
+    preNotify = notifyView;
+    notifyView.show();
+    // 震动与声音
     vibration ? HapticFeedback.heavyImpact() : null;
     playSound
         ? FlutterRingtonePlayer().play(
@@ -84,22 +97,24 @@ class NotifyInAppUtils {
           )
         : null;
   }
+}
 
-  bool isShown() {
-    return _overlayEntry != null;
+class NotifyView {
+  OverlayEntry? overlayEntry;
+  OverlayState? overlayState;
+  bool dismissed = false;
+
+  show() async {
+    overlayState?.insert(overlayEntry!);
+    // dismiss();
   }
 
-  Future<void> dismiss([bool animated = false]) async {
-    if (animated) {
-      return await _stateKey.currentState?._close();
-    } else {
-      return _closeSelfImmediately();
+  dismiss() async {
+    if (dismissed) {
+      return;
     }
-  }
-
-  void _closeSelfImmediately() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
+    dismissed = true;
+    overlayEntry?.remove();
   }
 }
 
@@ -145,7 +160,8 @@ class NotifyWidget extends StatefulWidget {
   State<NotifyWidget> createState() => _NotifyWidgetState();
 }
 
-class _NotifyWidgetState extends State<NotifyWidget> with TickerProviderStateMixin {
+class _NotifyWidgetState extends State<NotifyWidget>
+    with TickerProviderStateMixin {
   AnimationController? _playController;
   AnimationController? _playHorizontalController;
   double _offset = -1000;
@@ -251,7 +267,8 @@ class _NotifyWidgetState extends State<NotifyWidget> with TickerProviderStateMix
           setState(() {});
         },
         onHorizontalDragEnd: (details) {
-          if (_leftOffset > maxSize.width / 2 || -(_leftOffset) > maxSize.width / 2) {
+          if (_leftOffset > maxSize.width / 2 ||
+              -(_leftOffset) > maxSize.width / 2) {
             _horizontalClose();
           } else {
             _resetHorizontalTarget();
