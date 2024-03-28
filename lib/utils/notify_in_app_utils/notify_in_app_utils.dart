@@ -59,7 +59,7 @@ class NotifyInAppUtils {
 
     final OverlayState overlayState = Overlay.of(context);
     OverlayEntry? overlayEntry;
-
+    // 创建显示Widget
     overlayEntry = OverlayEntry(
       builder: (BuildContext context) => NotifyWidget(
         key: _stateKey,
@@ -79,7 +79,7 @@ class NotifyInAppUtils {
         },
       ),
     );
-
+    // 使用View统一管理
     var notifyView = NotifyView();
     notifyView.overlayEntry = overlayEntry;
     notifyView.overlayState = overlayState;
@@ -104,11 +104,13 @@ class NotifyView {
   OverlayState? overlayState;
   bool dismissed = false;
 
+  // 显示
   show() async {
     overlayState?.insert(overlayEntry!);
     // dismiss();
   }
 
+  // 删除
   dismiss() async {
     if (dismissed) {
       return;
@@ -189,6 +191,7 @@ class _NotifyWidgetState extends State<NotifyWidget>
   void initState() {
     super.initState();
     WidgetsBinding.instance.endOfFrame.then((timeStamp) {
+      // 获取Widget的宽高
       final box = childKey.currentContext?.findRenderObject() as RenderBox;
       childHeight = box.size.height;
       childWidth = box.size.width;
